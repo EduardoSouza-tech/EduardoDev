@@ -613,27 +613,15 @@
       gal.el.style.height = '';
       gal.track.style.transform = '';
       gal.panels.forEach((p) => {
-        p.title.style.transform = '';
+        p.info.style.transform = '';
         p.title.style.fontStretch = '';
         p.media.style.transform = '';
         p.img.style.removeProperty('--px');
-        p.info.style.marginTop = '';
       });
       return;
     }
-    // O título encosta numa borda da imagem (topo nos pares, base nos ímpares): invade de propósito, sem sobrar lasca invertida
-    gal.panels.forEach((p, i) => {
+    gal.panels.forEach((p) => {
       p.img.style.setProperty('--r', (p.img.getAttribute('width') / p.img.getAttribute('height')).toFixed(4));
-      p.title.style.fontStretch = '';
-      p.info.style.marginTop = '';
-      if (p.el.classList.contains('pj--phone')) return;
-      const inset = 10;
-      const desired = i % 2 === 1
-        ? p.media.offsetTop + inset - p.title.offsetTop
-        : p.media.offsetTop + p.media.offsetHeight - inset - (p.title.offsetTop + p.title.offsetHeight);
-      const floor = p.el.clientHeight - parseFloat(getComputedStyle(p.el).paddingBottom);
-      const room = floor - (p.info.offsetTop + p.info.offsetHeight);
-      p.info.style.marginTop = `${Math.max(0, Math.min(desired, room))}px`;
     });
     gal.dist = Math.max(1, gal.track.offsetWidth - S.vw);
     gal.range = gal.dist * RATIO;
@@ -659,8 +647,8 @@
       if (Math.abs(d) > 1.15) return;
       const near = clamp(1 - Math.abs(d) * 1.8);
       p.img.style.setProperty('--px', `${(-d * 34).toFixed(1)}px`);
-      p.title.style.transform = `translate3d(${(d * 70).toFixed(1)}px, 0, 0)`;
-      p.title.style.fontStretch = `${(62 + near * near * 16).toFixed(1)}%`;
+      p.info.style.transform = `translate3d(${(-d * 22).toFixed(1)}px, 0, 0)`;
+      p.title.style.fontStretch = `${(62 + near * near * 12).toFixed(1)}%`;
       p.media.style.transform = `skewX(${skew}deg)`;
     });
     setActive(nearestD < 0.62 ? nearest : -1);
@@ -673,13 +661,13 @@
   const seenObserver = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
-      e.target.classList.add('is-seen');
+      e.target.closest('.pj').classList.add('is-seen');
       seenObserver.unobserve(e.target);
     });
   }, { threshold: 0.12 });
   gal.panels.forEach((p) => {
     panelObserver.observe(p.el);
-    seenObserver.observe(p.el);
+    seenObserver.observe(p.media);
   });
 
   gal.track.addEventListener('focusin', (e) => {

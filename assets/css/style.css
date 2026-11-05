@@ -631,22 +631,18 @@ main { position: relative; z-index: 2; display: block; }
 .gallery-sticky { position: relative; }
 .gallery-ghost, .gallery-rail { display: none; }
 
-.gallery-track { position: relative; display: flex; flex-direction: column; gap: clamp(64px, 14vw, 110px); padding: clamp(80px, 12vw, 120px) var(--gutter) clamp(70px, 12vw, 110px); }
+.gallery-track { position: relative; display: flex; flex-direction: column; gap: clamp(44px, 10vw, 76px); padding: clamp(80px, 12vw, 120px) var(--gutter) clamp(70px, 12vw, 110px); }
 
 .gallery-intro .display { font-size: clamp(84px, 27vw, 200px); line-height: .86; }
 .gallery-sub { max-width: 26em; margin-top: 1.4em; color: #d5d5ce; }
 .gallery-hint { display: none; }
 
-.pj { display: flex; flex-direction: column; gap: 18px; }
+.pj { display: flex; flex-direction: column; gap: 22px; }
+.gallery:not(.is-pinned) .pj + .pj { padding-top: clamp(44px, 10vw, 76px); border-top: 1px solid var(--line); }
 .pj-info { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .pj-num { font: 400 11px/1 var(--mono); color: var(--signal); }
 .pj-badge { font: 400 10.5px/1.4 var(--mono); text-transform: uppercase; color: var(--soft); }
-.pj-title {
-  position: relative; z-index: 2;
-  font: 900 clamp(58px, 15vw, 136px)/.86 var(--display); font-stretch: 62%; text-transform: uppercase;
-  color: #fff;
-  mix-blend-mode: difference;
-}
+.pj-title { font: 900 clamp(58px, 15vw, 136px)/.86 var(--display); font-stretch: 62%; text-transform: uppercase; }
 .pj-desc { line-height: 1.48; color: #d5d5ce; }
 .pj-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 4px; }
 .pj-link {
@@ -686,6 +682,7 @@ main { position: relative; z-index: 2; display: block; }
 .anim .pj.is-active .frame-view img, .anim .frame:hover .frame-view img, .anim .frame:focus-visible .frame-view img { filter: none; }
 
 .frame--phone {
+  align-self: center;
   width: min(66vw, 300px);
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, .32);
@@ -697,20 +694,18 @@ main { position: relative; z-index: 2; display: block; }
 .frame--phone .frame-view img { transform: translate3d(0, 0, 0) scale(1.01); }
 
 @media (min-width: 900px) {
-  .gallery:not(.is-pinned) .gallery-track { gap: clamp(90px, 10vw, 170px); }
   .gallery:not(.is-pinned) .pj {
-    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    gap: clamp(28px, 4vw, 72px); align-items: center;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: clamp(28px, 4vw, 72px); align-items: start;
   }
   .gallery:not(.is-pinned) .pj-title { font-size: clamp(56px, 6.4vw, 120px); }
   .gallery:not(.is-pinned) .frame--phone { justify-self: center; }
 }
 
-/* As imagens se revelam ao entrar em cena */
-.anim .pj-media { clip-path: inset(100% 0 0 0 round 12px); transition: clip-path 1.3s var(--ease-io); }
-.anim .pj.is-seen .pj-media { clip-path: inset(0 0 0 0 round 12px); }
-.anim .pj--phone .pj-media { clip-path: inset(100% 0 0 0 round 40px); }
-.anim .pj--phone.is-seen .pj-media { clip-path: inset(0 0 0 0 round 40px); }
+/* A moldura aparece antes e a imagem se revela dentro dela.
+   O recorte fica no filho porque o IntersectionObserver não dispara em alvo totalmente recortado. */
+.anim .frame-view { clip-path: inset(100% 0 0 0); transition: clip-path 1.3s var(--ease-io); }
+.anim .pj.is-seen .frame-view { clip-path: inset(0); }
 
 /* Galeria fixa com rolagem horizontal (telas grandes) */
 .is-pinned .gallery-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; overflow: clip; }
@@ -747,36 +742,32 @@ main { position: relative; z-index: 2; display: block; }
 @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
 
 .is-pinned .pj {
-  --info-w: clamp(280px, 25vw, 440px);
+  --info-w: clamp(300px, 29vw, 500px);
+  --pj-gap: clamp(32px, 3.4vw, 64px);
   position: relative;
   flex: none;
-  display: grid; grid-template-columns: auto var(--info-w);
-  gap: 0 clamp(24px, 3vw, 56px);
+  display: grid; grid-template-columns: var(--info-w) auto;
+  align-content: center; align-items: start;
+  column-gap: var(--pj-gap);
   height: 100%;
   padding: clamp(58px, 10svh, 110px) 0 clamp(66px, 11svh, 104px);
 }
-.is-pinned .pj-media { align-self: start; }
-.is-pinned .pj-info { align-self: start; gap: clamp(7px, 1.1svh, 14px); }
+/* Alturas alternadas mantêm o ritmo do trilho sem mudar a ordem de leitura */
+.is-pinned .pj:nth-of-type(odd) > * { translate: 0 -3.5svh; }
+.is-pinned .pj:nth-of-type(even) > * { translate: 0 3.5svh; }
+.is-pinned .pj-info { gap: clamp(7px, 1.1svh, 14px); }
 .is-pinned .frame-view img {
   max-width: none;
-  width: min(calc(var(--r, 1.8) * min(58svh, 700px)), calc(90vw - var(--info-w) - clamp(24px, 3vw, 56px)));
+  width: min(calc(var(--r, 1.8) * min(60svh, 720px)), calc(94vw - var(--info-w) - var(--pj-gap)));
 }
-.is-pinned .pj-title { font-size: clamp(52px, min(7vw, 13svh), 132px); }
+/* O título é dimensionado pela coluna de texto: a palavra mais longa cabe sem encostar na imagem */
+.is-pinned .pj-title { width: max-content; white-space: nowrap; font-size: min(calc(var(--info-w) / 5.9), 13svh); }
 .is-pinned .pj-desc { font-size: clamp(14px, 1.08vw, 18px); }
 
-/* Painéis pares: composição invertida, para o trilho não ficar monótono */
-.is-pinned .pj:nth-of-type(even) { grid-template-columns: var(--info-w) auto; }
-.is-pinned .pj:nth-of-type(even) .pj-media { order: 2; align-self: end; }
-
-/* Os títulos invadem a imagem; a mistura "difference" inverte o texto sobre ela */
-.is-pinned .pj-title { width: max-content; white-space: nowrap; }
-.is-pinned .pj:nth-of-type(odd) .pj-title { margin-left: calc(var(--info-w) * -.42); }
-
-.is-pinned .pj.pj--phone { --info-w: clamp(320px, 36vw, 620px); grid-template-columns: var(--info-w) auto; }
-.is-pinned .pj.pj--phone .pj-media { order: 2; align-self: center; width: auto; }
-.is-pinned .pj.pj--phone .pj-info { align-self: center; }
+.is-pinned .pj.pj--phone { align-items: center; }
+.is-pinned .pj.pj--phone > * { translate: none; }
+.is-pinned .pj.pj--phone .pj-media { width: auto; }
 .is-pinned .pj.pj--phone .frame-view img { width: calc(var(--r, .45) * min(74svh, 880px)); }
-.is-pinned .pj.pj--phone .pj-title { margin-left: 0; }
 
 .anim .is-pinned .pj-info > :not(.pj-title) { transition: opacity .6s var(--ease); }
 .anim .is-pinned .pj:not(.is-active) .pj-info > :not(.pj-title) { opacity: .28; }
