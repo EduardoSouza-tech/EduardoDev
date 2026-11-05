@@ -644,6 +644,7 @@ main { position: relative; z-index: 2; display: block; }
 .pj-badge { font: 400 10.5px/1.4 var(--mono); text-transform: uppercase; color: var(--soft); }
 .pj-title { font: 900 clamp(58px, 15vw, 136px)/.86 var(--display); font-stretch: 62%; text-transform: uppercase; }
 .pj-desc { line-height: 1.48; color: #d5d5ce; }
+.nb { white-space: nowrap; }
 .pj-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 4px; }
 .pj-link {
   display: inline-flex; align-items: center; gap: 6px;
