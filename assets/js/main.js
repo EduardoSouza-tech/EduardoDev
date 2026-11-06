@@ -535,7 +535,8 @@
       badge.style.setProperty('--sy', `${(ny * 100).toFixed(1)}%`);
     }
     if (!pend.drag) return;
-    const target = pend.startA + ((e.clientX - pend.startX) / pend.len) * (180 / Math.PI);
+    // O pivô fica acima do crachá: ângulo positivo leva a ponta para a esquerda, por isso o sinal é invertido
+    const target = pend.startA - ((e.clientX - pend.startX) / pend.len) * (180 / Math.PI);
     const next = clamp(target, -pend.max * 2.4, pend.max * 2.4);
     pend.v = next - pend.a;
     pend.a = next;
