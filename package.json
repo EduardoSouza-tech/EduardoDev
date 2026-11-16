@@ -1,0 +1,13 @@
+{
+  "name": "eduardodev",
+  "private": true,
+  "description": "Portfólio de Eduardo Souza",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "http-server": "^14.1.1"
+  }
+}
