@@ -1,0 +1,6 @@
+# Dependências e resultados dos testes (gerados na hora, não vão para o repositório)
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
